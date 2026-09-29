@@ -1,0 +1,9 @@
+The rules dataset in this directory (groups.yaml, regions/, countries/) is
+licensed under the Creative Commons Attribution 4.0 International License
+(CC BY 4.0): https://creativecommons.org/licenses/by/4.0/
+
+Attribute as "borderkit contributors, https://github.com/Wander-Kit/borderkit".
+
+This dataset describes border rules as published by governments; it is not
+legal advice and rules change. Every entry names its source and the date it
+was last verified. Check the source before you travel.

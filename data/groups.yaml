@@ -1,0 +1,27 @@
+# Country groupings the engine reasons with. Memberships change (Bulgaria and
+# Romania joined Schengen fully in March 2025), so each carries a source.
+groups:
+  eu:
+    source: https://european-union.europa.eu/principles-countries-history/eu-countries_en
+    verified: 2026-09-29
+    members: [AT, BE, BG, HR, CY, CZ, DK, EE, FI, FR, DE, GR, HU, IE, IT, LV, LT, LU, MT, NL, PL, PT, RO, SK, SI, ES, SE]
+  free_movement:
+    note: EU + EEA (IS, LI, NO) + Switzerland; citizens travel on an ID card or passport with no visa or time limit for visits.
+    source: https://eur-lex.europa.eu/eli/dir/2004/38/oj
+    verified: 2026-09-29
+    members: [AT, BE, BG, HR, CY, CZ, DK, EE, FI, FR, DE, GR, HU, IE, IT, LV, LT, LU, MT, NL, PL, PT, RO, SK, SI, ES, SE, IS, LI, NO, CH]
+  schengen:
+    note: Cyprus and Ireland are EU members outside Schengen.
+    source: https://home-affairs.ec.europa.eu/policies/schengen-borders-and-visa/schengen-area_en
+    verified: 2026-09-29
+    members: [AT, BE, BG, HR, CZ, DK, EE, FI, FR, DE, GR, HU, IS, IT, LV, LI, LT, LU, MT, NL, NO, PL, PT, RO, SK, SI, ES, SE, CH]
+  us_visa_waiver:
+    note: Passports admitted to the US Visa Waiver Program (ESTA). Everyone else needs a visa even to connect through a US airport.
+    source: https://travel.state.gov/content/travel/en/us-visas/tourism-visit/visa-waiver-program.html
+    verified: 2026-09-29
+    members: [AD, AT, AU, BE, BN, BG, CL, HR, CZ, DK, EE, FI, FR, DE, GR, HU, IS, IE, IL, IT, JP, KR, LV, LI, LT, LU, MT, MC, NL, NZ, NO, PL, PT, QA, RO, SM, SG, SK, SI, ES, SE, CH, TW, GB]
+  schengen_atv:
+    note: Passports needing an airport transit visa for an airside connection in the Schengen area (Visa Code, Annex IV). Holders of a valid Schengen visa or residence permit are exempt.
+    source: https://eur-lex.europa.eu/eli/reg/2009/810/oj
+    verified: 2026-09-29
+    members: [AF, BD, CD, ER, ET, GH, IR, IQ, LK, NG, PK, SO]

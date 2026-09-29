@@ -1,0 +1,10 @@
+# Canada — entry rules beyond the passport matrix. Every rule needs a source; confidence 'seed' means one is still wanted.
+country: CA
+name: Canada
+transit:
+  airside_visa_for: "all_except:free_movement"
+  exemptions: []
+  source: "https://www.canada.ca/en/immigration-refugees-citizenship/services/visit-canada/eta.html"
+  verified: 2026-09-29
+  confidence: medium
+  note: "An eTA (visa-exempt passports) or a transit visa is needed even for an airside connection, apart from the limited China Transit and Transit Without Visa programmes."

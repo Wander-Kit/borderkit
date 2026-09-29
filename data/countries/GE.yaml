@@ -1,0 +1,12 @@
+# Georgia — entry rules beyond the passport matrix. Every rule needs a source; confidence 'seed' means one is still wanted.
+country: GE
+name: Georgia
+permit_holders:
+  - permit_from: schengen
+    accepts: [permanent, temporary, visa]
+    result: visa_free
+    days: 90
+    source: ""
+    verified: ""
+    confidence: seed
+    note: "Admits holders of a valid Schengen residence permit or visa without a visa, whatever the passport. Migrated from travel-agent's tables; needs an official source."

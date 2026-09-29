@@ -1,0 +1,10 @@
+# United States — entry rules beyond the passport matrix. Every rule needs a source; confidence 'seed' means one is still wanted.
+country: US
+name: United States
+transit:
+  airside_visa_for: "all_except:us_visa_waiver"
+  exemptions: []
+  source: "https://travel.state.gov/content/travel/en/us-visas/other-visa-categories/transit.html"
+  verified: 2026-09-29
+  confidence: high
+  note: "Every passenger entering a US airport clears immigration: a visa (C transit or B visitor), or ESTA for visa-waiver passports. Residence permits elsewhere do not count."

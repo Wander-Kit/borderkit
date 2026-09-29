@@ -1,0 +1,10 @@
+# South Korea — entry rules beyond the passport matrix. Every rule needs a source; confidence 'seed' means one is still wanted.
+country: KR
+name: South Korea
+arrival:
+  form: K-ETA for visa-free visitors (several passports temporarily exempt)
+  applies_to: visa_exempt
+  source: "https://www.k-eta.go.kr"
+  verified: 2026-09-29
+  confidence: medium
+  note: ""

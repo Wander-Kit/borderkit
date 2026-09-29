@@ -1,0 +1,9 @@
+# Niger — entry rules beyond the passport matrix. Every rule needs a source; confidence 'seed' means one is still wanted.
+country: NE
+name: Niger
+health:
+  yellow_fever: all
+  source: "https://www.who.int/publications/m/item/countries-with-risk-of-yellow-fever-transmission-and-countries-requiring-yellow-fever-vaccination-(november-2022)"
+  verified: 2026-09-29
+  confidence: medium
+  note: Proof of yellow fever vaccination required from every arriving traveller aged 9 months or over.

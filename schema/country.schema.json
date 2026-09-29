@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "borderkit country rules",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["country", "name"],
+  "$defs": {
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "source": { "type": "string" },
+        "verified": { "type": "string", "pattern": "^(\\d{4}-\\d{2}-\\d{2})?$" },
+        "confidence": { "enum": ["high", "medium", "low", "seed"] },
+        "note": { "type": "string" }
+      },
+      "required": ["confidence"]
+    }
+  },
+  "properties": {
+    "country": { "type": "string", "pattern": "^[A-Z]{2}$" },
+    "name": { "type": "string" },
+    "region": { "type": "string" },
+    "passport_validity": {
+      "allOf": [{ "$ref": "#/$defs/provenance" }],
+      "properties": { "rule": { "enum": ["valid_on_day", "valid_for_stay", "three_months_after_departure", "six_months_on_arrival", "six_months_after_departure"] } },
+      "required": ["rule"]
+    },
+    "permit_holders": {
+      "type": "array",
+      "items": {
+        "allOf": [{ "$ref": "#/$defs/provenance" }],
+        "properties": {
+          "permit_from": { "type": "string" },
+          "accepts": { "type": "array", "items": { "enum": ["permanent", "temporary", "visa"] } },
+          "result": { "enum": ["visa_free", "on_arrival", "e_visa"] },
+          "days": { "type": "integer" },
+          "per": { "type": "integer" }
+        },
+        "required": ["permit_from", "accepts", "result"]
+      }
+    },
+    "arrival": {
+      "allOf": [{ "$ref": "#/$defs/provenance" }],
+      "properties": { "form": { "type": "string" }, "applies_to": { "enum": ["all", "visa_exempt"] } },
+      "required": ["form", "applies_to"]
+    },
+    "health": {
+      "allOf": [{ "$ref": "#/$defs/provenance" }],
+      "properties": { "yellow_fever": { "enum": ["all", "none", "from_endemic"] } }
+    },
+    "transit": {
+      "allOf": [{ "$ref": "#/$defs/provenance" }],
+      "properties": {
+        "airside_visa_for": { "type": "string" },
+        "exemptions": { "type": "array", "items": { "enum": ["schengen_permit", "schengen_visa", "free_movement", "destination_visa"] } }
+      },
+      "required": ["airside_visa_for"]
+    },
+    "eta": {
+      "allOf": [{ "$ref": "#/$defs/provenance" }],
+      "properties": { "name": { "type": "string" }, "applies_to": { "enum": ["all", "visa_exempt"] }, "from": { "type": "string" } },
+      "required": ["name"]
+    }
+  }
+}

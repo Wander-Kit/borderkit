@@ -1,0 +1,10 @@
+# New Zealand — entry rules beyond the passport matrix. Every rule needs a source; confidence 'seed' means one is still wanted.
+country: NZ
+name: New Zealand
+arrival:
+  form: New Zealand Traveller Declaration before departure
+  applies_to: all
+  source: "https://www.travellerdeclaration.govt.nz"
+  verified: 2026-09-29
+  confidence: medium
+  note: ""

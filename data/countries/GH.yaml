@@ -1,0 +1,15 @@
+# Ghana — entry rules beyond the passport matrix. Every rule needs a source; confidence 'seed' means one is still wanted.
+country: GH
+name: Ghana
+passport_validity:
+  rule: six_months_on_arrival
+  source: ""
+  verified: ""
+  confidence: seed
+  note: "Passport must be valid six months on arrival. Migrated from travel-agent's tables; needs an official source."
+health:
+  yellow_fever: all
+  source: "https://www.who.int/publications/m/item/countries-with-risk-of-yellow-fever-transmission-and-countries-requiring-yellow-fever-vaccination-(november-2022)"
+  verified: 2026-09-29
+  confidence: medium
+  note: Proof of yellow fever vaccination required from every arriving traveller aged 9 months or over.

@@ -1,0 +1,33 @@
+# Defaults every Schengen member inherits. A country file may override any section.
+region: schengen
+passport_validity:
+  rule: three_months_after_departure
+  note: Valid at least three months after the intended departure date and issued within the previous ten years; not applied to EU/EEA/CH citizens or to residence permit holders.
+  source: https://eur-lex.europa.eu/eli/reg/2016/399/oj
+  verified: 2026-09-29
+  confidence: high
+permit_holders:
+  - permit_from: schengen
+    accepts: [permanent, temporary, visa]
+    result: visa_free
+    days: 90
+    per: 180
+    note: A residence permit or long-stay visa from any Schengen state allows movement across the area for up to 90 days in any 180 (Schengen Borders Code art. 6(1)(b); Convention art. 21). No ETIAS.
+    source: https://eur-lex.europa.eu/eli/reg/2016/399/oj
+    verified: 2026-09-29
+    confidence: high
+transit:
+  airside_visa_for: schengen_atv
+  exemptions: [schengen_permit, schengen_visa, free_movement]
+  note: Airside connections need no visa except for Annex IV passports; leaving the transit zone means entering Schengen.
+  source: https://eur-lex.europa.eu/eli/reg/2009/810/oj
+  verified: 2026-09-29
+  confidence: high
+eta:
+  name: ETIAS
+  applies_to: visa_exempt
+  from: 2026-Q4
+  note: Visa-exempt third-country nationals will need an ETIAS authorisation (online, €20, valid three years). Residence permit holders are exempt.
+  source: https://travel-europe.europa.eu/etias_en
+  verified: 2026-09-29
+  confidence: high

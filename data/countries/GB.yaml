@@ -1,0 +1,17 @@
+# United Kingdom — entry rules beyond the passport matrix. Every rule needs a source; confidence 'seed' means one is still wanted.
+country: GB
+name: United Kingdom
+arrival:
+  form: UK Electronic Travel Authorisation (ETA) for visa-exempt visitors
+  applies_to: visa_exempt
+  source: "https://www.gov.uk/guidance/apply-for-an-electronic-travel-authorisation-eta"
+  verified: 2026-09-29
+  confidence: medium
+  note: ""
+transit:
+  airside_visa_for: check
+  exemptions: [schengen_permit, schengen_visa, free_movement]
+  source: "https://www.gov.uk/transit-visa"
+  verified: 2026-09-29
+  confidence: medium
+  note: Some passports need a Direct Airside Transit Visa; holders of certain visas and EEA/Swiss residence permits are exempt.

@@ -1,0 +1,16 @@
+# Cuba — entry rules beyond the passport matrix. Every rule needs a source; confidence 'seed' means one is still wanted.
+country: CU
+name: Cuba
+passport_validity:
+  rule: six_months_on_arrival
+  source: ""
+  verified: ""
+  confidence: seed
+  note: "Passport must be valid six months on arrival. Migrated from travel-agent's tables; needs an official source."
+arrival:
+  form: "D'Viajeros form within 72 hours before arrival"
+  applies_to: all
+  source: ""
+  verified: ""
+  confidence: seed
+  note: "Migrated from travel-agent's curated tables; needs an official source."

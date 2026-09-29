@@ -1,0 +1,9 @@
+# Chile — entry rules beyond the passport matrix. Every rule needs a source; confidence 'seed' means one is still wanted.
+country: CL
+name: Chile
+passport_validity:
+  rule: six_months_on_arrival
+  source: ""
+  verified: ""
+  confidence: seed
+  note: "Passport must be valid six months on arrival. Migrated from travel-agent's tables; needs an official source."
