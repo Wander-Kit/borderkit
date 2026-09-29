@@ -76,6 +76,17 @@ it; that keeps airport data out of this repository.
 6. **Insurance** (€30 000 for Schengen visa applicants), **health** (yellow
    fever), **arrival cards**, and what to have ready at the border.
 
+## Try it in the browser
+
+The viewer at **https://wander-kit.github.io/borderkit/** runs the same Go engine
+compiled to WebAssembly, entirely in your browser. Pick passport, residence,
+destination and connections; every line links its source and has a "this is
+wrong" button that opens a pre-filled issue. Build it locally with
+`GOOS=js GOARCH=wasm go build -ldflags="-s -w" -o web/borderkit.wasm ./cmd/wasm` and serve `web/`.
+
+The open work is listed in [docs/SEED.md](docs/SEED.md): rules that still need an
+official source. Regenerate it with `go run ./cmd/validate -seed-md docs/SEED.md`.
+
 ## Contributing
 
 The unit of contribution is one rule with one source. See

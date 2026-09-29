@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>borderkit · what will the border ask for?</title>
+<meta name="description" content="Given your passport, where you live and where you are going: what the border will ask for, with the rule behind every line.">
+<style>
+  :root { --bg: #f6f5f1; --card: #fff; --fg: #1a1a19; --fg2: #444; --muted: #6b6b66; --border: #dedcd4; --accent: #2a78d6; --ok: #1a7f4b; --warn: #b45309; --info: #6b6b66; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #111110; --card: #1b1b19; --fg: #f2f1ec; --fg2: #c9c8c1; --muted: #8e8d86; --border: #2e2e2b; --accent: #4d8ee0; --ok: #34b36f; --warn: #e5a02b; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.45 -apple-system, "Segoe UI", Inter, Roboto, sans-serif; background: var(--bg); color: var(--fg); }
+  main { max-width: 860px; margin: 0 auto; padding: 24px 16px 64px; display: grid; gap: 16px; }
+  h1 { margin: 0; font-size: 1.6rem; } h1 small { display: block; font-size: 0.95rem; font-weight: 400; color: var(--muted); margin-top: 4px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+  form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  label { display: grid; gap: 4px; font-size: 0.85rem; color: var(--muted); }
+  select, input { font: inherit; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: inherit; width: 100%; }
+  button { font: inherit; padding: 9px 14px; border-radius: 8px; border: 1px solid var(--accent); background: var(--accent); color: #fff; cursor: pointer; }
+  button.ghost { background: transparent; color: var(--accent); }
+  .actions { grid-column: 1 / -1; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  ul.req { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .req li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .req li:last-child { border-bottom: 0; }
+  .mark { font-weight: 700; } .ok .mark { color: var(--ok); } .warn .mark, .todo .mark { color: var(--warn); } .info .mark { color: var(--info); }
+  .req b { display: block; } .req p { margin: 2px 0 0; color: var(--fg2); }
+  .basis { display: inline-block; margin-top: 6px; margin-right: 6px; padding: 1px 8px; border: 1px solid var(--border); border-radius: 999px; font-size: 0.75rem; color: var(--muted); text-decoration: none; }
+  .basis.check { border-color: var(--warn); color: var(--warn); }
+  .wrong { font-size: 0.75rem; color: var(--muted); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+  .muted { color: var(--muted); } .small { font-size: 0.85rem; }
+  footer { color: var(--muted); font-size: 0.85rem; }
+  footer a, .req a.src { color: var(--accent); }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <h1>borderkit <small>Given your papers, what will the border ask for? Every line names the rule behind it. Not legal advice; check the source before you fly.</small></h1>
+  <form id="f" class="card">
+    <label>Passport <select id="nat" required></select></label>
+    <label>Passport expires <input id="pexp" type="date"></label>
+    <label>Where you live <select id="res"><option value="">same as passport / not set</option></select></label>
+    <label>On what basis <select id="rstat"><option value="">—</option><option value="citizen">Citizen</option><option value="permanent">Permanent residence permit</option><option value="temporary">Temporary residence permit</option></select></label>
+    <label>Permit expires <input id="pmexp" type="date"></label>
+    <label>Visas held (countries) <input id="visas" placeholder="GB, US"></label>
+    <label>From <select id="from"></select></label>
+    <label>To <select id="to" required></select></label>
+    <label>Connecting via (countries) <input id="via" placeholder="DE, US"></label>
+    <label>Depart <input id="dep" type="date"></label>
+    <label>Return <input id="ret" type="date"></label>
+    <div class="actions">
+      <button type="submit" id="go">What do I need?</button>
+      <span id="status" class="muted small">Loading the engine…</span>
+    </div>
+  </form>
+  <section id="out" class="card hidden">
+    <ul class="req" id="req"></ul>
+  </section>
+  <footer>
+    Rules and engine: <a href="https://github.com/Wander-Kit/borderkit">Wander-Kit/borderkit</a> (data CC BY 4.0, code MIT). Passport → country rules from the <a href="https://github.com/ilyankou/passport-index-dataset">Passport Index dataset</a>. Rules marked <span class="basis check">check</span> are curated or unsourced: confirm with an official page, or <a href="https://github.com/Wander-Kit/borderkit/issues/new">add the source</a>.
+  </footer>
+</main>
+<script src="wasm_exec.js"></script>
+<script>
+const names = (() => { try { return new Intl.DisplayNames(["en"], { type: "region" }); } catch { return null; } })();
+const name = (cc) => { try { return names?.of(cc) || cc; } catch { return cc; } };
+const flag = (cc) => cc.length === 2 ? String.fromCodePoint(...[...cc.toUpperCase()].map((c) => 0x1F1E6 + c.charCodeAt(0) - 65)) : "";
+const $ = (id) => document.getElementById(id);
+const q = new URLSearchParams(location.search);
+
+function fill(sel, codes, blank) {
+  if (blank) sel.append(new Option(blank, ""));
+  codes.map((cc) => [cc, name(cc)]).sort((a, b) => a[1].localeCompare(b[1])).forEach(([cc, n]) => sel.append(new Option(`${flag(cc)} ${n} (${cc})`, cc)));
+}
+async function boot() {
+  const go = new Go();
+  const res = await WebAssembly.instantiateStreaming(fetch("borderkit.wasm"), go.importObject);
+  go.run(res.instance);
+  const c = JSON.parse(borderkit.countries());
+  const all = new Set([...c.passports, ...c.destinations]);
+  borderkit.setNames(JSON.stringify(Object.fromEntries([...all].map((cc) => [cc, name(cc)]))));
+  fill($("nat"), c.passports, "—"); fill($("res"), c.destinations); fill($("from"), c.destinations, "—"); fill($("to"), c.destinations, "—");
+  for (const [id, key] of [["nat", "passport"], ["res", "residence"], ["rstat", "status"], ["from", "from"], ["to", "to"], ["via", "via"], ["visas", "visas"], ["pexp", "passportExpires"], ["pmexp", "permitExpires"], ["dep", "depart"], ["ret", "return"]]) if (q.get(key)) $(id).value = q.get(key);
+  $("status").textContent = "";
+  $("go").disabled = false;
+  if (q.get("passport") && q.get("to")) run();
+}
+const list = (s) => s.split(",").map((x) => x.trim().toUpperCase()).filter((x) => /^[A-Z]{2}$/.test(x));
+function run() {
+  const input = { nationality: $("nat").value, passportExpires: $("pexp").value, residence: $("res").value, residenceStatus: $("rstat").value, permitExpires: $("pmexp").value, visas: list($("visas").value), from: $("from").value, to: $("to").value, via: list($("via").value), depart: $("dep").value, return: $("ret").value };
+  const reqs = JSON.parse(borderkit.assess(JSON.stringify(input)));
+  const params = new URLSearchParams({ passport: input.nationality, to: input.to });
+  for (const [k, v] of [["residence", input.residence], ["status", input.residenceStatus], ["from", input.from], ["via", input.via.join(",")], ["visas", input.visas.join(",")], ["passportExpires", input.passportExpires], ["permitExpires", input.permitExpires], ["depart", input.depart], ["return", input.return]]) if (v) params.set(k, v);
+  history.replaceState(null, "", "?" + params);
+  const mark = { ok: "✓", todo: "☐", warn: "!", info: "·" };
+  $("req").innerHTML = "";
+  for (const r of reqs) {
+    const li = document.createElement("li"); li.className = r.status;
+    const issue = new URL("https://github.com/Wander-Kit/borderkit/issues/new");
+    issue.searchParams.set("title", `Wrong rule: ${r.title} for ${input.nationality} → ${input.to}`);
+    issue.searchParams.set("body", `**Viewer link:** ${location.href}\n\n**Line:** ${r.title} — ${r.detail}\n**Basis:** ${r.basis || "—"}${r.source ? `\n**Source shown:** ${r.source}` : ""}\n\n**What is actually the case (with an official source):**\n\n`);
+    li.innerHTML = `<span class="mark">${mark[r.status] || "·"}</span><div><b>${esc(r.title)}</b><p>${esc(r.detail)}</p>` +
+      (r.basis || r.source ? (r.source ? `<a class="basis ${r.check ? "check" : ""}" href="${esc(r.source)}" target="_blank" rel="noopener">${esc(r.basis || "source")} ↗</a>` : `<span class="basis ${r.check ? "check" : ""}">${esc(r.basis)}</span>`) : "") +
+      `<button class="wrong" type="button" onclick="window.open('${issue.toString().replace(/'/g, "%27")}', '_blank')">this is wrong</button></div>`;
+    $("req").append(li);
+  }
+  $("out").classList.remove("hidden");
+}
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+$("f").addEventListener("submit", (e) => { e.preventDefault(); run(); });
+$("go").disabled = true;
+boot().catch((e) => { $("status").textContent = "Could not load the engine: " + e; });
+</script>
+</body>
+</html>
